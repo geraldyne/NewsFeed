@@ -6,19 +6,21 @@ const PostForm = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (title.trim() && body.trim()) {
-      dispatch(addPost({
-        title: title.trim(),
-        body: body.trim(),
-        userId: 1 // Simulamos un usuario
-      }));
-      
+      dispatch(
+        addPost({
+          title: title.trim(),
+          body: body.trim(),
+          userId: 1, // Simulamos un usuario
+        })
+      );
+
       // Limpiar el formulario
       setTitle("");
       setBody("");
@@ -35,7 +37,7 @@ const PostForm = () => {
   if (!isOpen) {
     return (
       <div style={{ marginBottom: "20px", textAlign: "center" }}>
-        <button 
+        <button
           onClick={() => setIsOpen(true)}
           style={{
             backgroundColor: "#007bff",
@@ -44,27 +46,36 @@ const PostForm = () => {
             padding: "12px 24px",
             borderRadius: "5px",
             cursor: "pointer",
-            fontSize: "16px"
+            fontSize: "16px",
           }}
         >
-          ✏️ Crear nuevo post
+          Crear nuevo post
         </button>
       </div>
     );
   }
 
   return (
-    <div style={{
-      backgroundColor: "#f8f9fa",
-      padding: "20px",
-      borderRadius: "8px",
-      marginBottom: "20px",
-      border: "1px solid #dee2e6"
-    }}>
+    <div
+      style={{
+        backgroundColor: "#f8f9fa",
+        padding: "20px",
+        borderRadius: "8px",
+        marginBottom: "20px",
+        border: "1px solid #dee2e6",
+      }}
+    >
       <h3 style={{ marginTop: 0 }}>Crear nuevo post</h3>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="title" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+          <label
+            htmlFor="title"
+            style={{
+              display: "block",
+              marginBottom: "5px",
+              fontWeight: "bold",
+            }}
+          >
             Título:
           </label>
           <input
@@ -78,14 +89,21 @@ const PostForm = () => {
               padding: "10px",
               border: "1px solid #ced4da",
               borderRadius: "4px",
-              fontSize: "16px"
+              fontSize: "16px",
             }}
             required
           />
         </div>
-        
+
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="body" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+          <label
+            htmlFor="body"
+            style={{
+              display: "block",
+              marginBottom: "5px",
+              fontWeight: "bold",
+            }}
+          >
             Contenido:
           </label>
           <textarea
@@ -100,12 +118,12 @@ const PostForm = () => {
               border: "1px solid #ced4da",
               borderRadius: "4px",
               fontSize: "16px",
-              resize: "vertical"
+              resize: "vertical",
             }}
             required
           />
         </div>
-        
+
         <div style={{ display: "flex", gap: "10px" }}>
           <button
             type="submit"
@@ -116,12 +134,12 @@ const PostForm = () => {
               padding: "10px 20px",
               borderRadius: "4px",
               cursor: "pointer",
-              fontSize: "16px"
+              fontSize: "16px",
             }}
           >
             📝 Publicar
           </button>
-          
+
           <button
             type="button"
             onClick={handleCancel}
@@ -132,7 +150,7 @@ const PostForm = () => {
               padding: "10px 20px",
               borderRadius: "4px",
               cursor: "pointer",
-              fontSize: "16px"
+              fontSize: "16px",
             }}
           >
             ❌ Cancelar
