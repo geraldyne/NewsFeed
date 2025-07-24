@@ -5,16 +5,33 @@ const Post = forwardRef(
     <div
       ref={ref}
       style={{
-        borderBottom: "1px solid #ccc",
+        borderBottom: "1px solid #333333",
         marginBottom: "16px",
-        padding: "15px",
-        backgroundColor: "#ffffff",
-        borderRadius: "8px",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        padding: "20px",
+        backgroundColor: "#1a1a1a",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+        border: "1px solid #333333",
       }}
     >
-      <h3 style={{ margin: "0 0 10px 0", color: "#333" }}>{title}</h3>
-      <p style={{ margin: "0 0 15px 0", color: "#666", lineHeight: "1.5" }}>
+      <h3
+        style={{
+          margin: "0 0 12px 0",
+          color: "#ffffff",
+          fontSize: "18px",
+          fontWeight: "600",
+        }}
+      >
+        {title}
+      </h3>
+      <p
+        style={{
+          margin: "0 0 18px 0",
+          color: "#e0e0e0",
+          lineHeight: "1.6",
+          fontSize: "15px",
+        }}
+      >
         {body}
       </p>
 
@@ -22,14 +39,27 @@ const Post = forwardRef(
         <button
           onClick={onLike}
           style={{
-            backgroundColor: liked ? "#ff6b6b" : "#f8f9fa",
-            color: liked ? "white" : "#333",
-            border: "1px solid #dee2e6",
-            padding: "8px 16px",
-            borderRadius: "20px",
+            backgroundColor: liked ? "#ff4757" : "#2a2a2a",
+            color: liked ? "white" : "#e0e0e0",
+            border: `1px solid ${liked ? "#ff4757" : "#444444"}`,
+            padding: "10px 18px",
+            borderRadius: "25px",
             cursor: "pointer",
             fontSize: "14px",
-            transition: "all 0.2s ease",
+            fontWeight: "500",
+            transition: "all 0.3s ease",
+          }}
+          onMouseOver={(e) => {
+            if (!liked) {
+              e.target.style.backgroundColor = "#3a3a3a";
+              e.target.style.borderColor = "#555555";
+            }
+          }}
+          onMouseOut={(e) => {
+            if (!liked) {
+              e.target.style.backgroundColor = "#2a2a2a";
+              e.target.style.borderColor = "#444444";
+            }
           }}
         >
           {liked ? "❤️ Liked" : "🤍 Like"}
@@ -37,7 +67,7 @@ const Post = forwardRef(
 
         <span
           style={{
-            color: "#666",
+            color: "#b0b0b0",
             fontSize: "14px",
             fontWeight: "500",
           }}

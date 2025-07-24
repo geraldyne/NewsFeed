@@ -55,8 +55,25 @@ function App() {
   }, [page, dispatch]);
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <h1 style={{ textAlign: "center", color: "#333", marginBottom: "30px" }}>
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "20px",
+        backgroundColor: "#0a0a0a",
+        minHeight: "100vh",
+      }}
+    >
+      <h1
+        style={{
+          textAlign: "center",
+          color: "#ffffff",
+          marginBottom: "30px",
+          fontSize: "28px",
+          fontWeight: "700",
+          textShadow: "0 2px 4px rgba(0,0,0,0.5)",
+        }}
+      >
         News Feed
       </h1>
 
@@ -91,8 +108,31 @@ function App() {
         );
       })}
 
-      {loading && <p>Cargando más publicaciones...</p>}
-      {!hasMore && <p>No hay más publicaciones</p>}
+      {loading && (
+        <p
+          style={{
+            textAlign: "center",
+            color: "#b0b0b0",
+            fontSize: "16px",
+            margin: "20px 0",
+          }}
+        >
+          Cargando más publicaciones...
+        </p>
+      )}
+      {!hasMore && (
+        <p
+          style={{
+            textAlign: "center",
+            color: "#808080",
+            fontSize: "16px",
+            margin: "20px 0",
+            fontStyle: "italic",
+          }}
+        >
+          No hay más publicaciones
+        </p>
+      )}
     </div>
   );
 }
