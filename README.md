@@ -1,12 +1,48 @@
-# React + Vite
+# NewsFeed
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and modern social media application built with React and Redux.
 
-Currently, two official plugins are available:
+## Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+NewsFeed is a web application that allows users to create, view, and like posts. It features an elegant dark design and an intuitive interface with infinite scroll to automatically load more content.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Create new posts with title and content
+- View post feed with infinite scroll
+- Real-time like system
+- Responsive design with dark theme
+- Floating modal for creating posts
+- Automatic content loading from external API
+
+## Technologies used
+
+- React
+- Redux Toolkit for state management
+- Vite as build tool
+- Axios for HTTP requests
+- CSS-in-JS for styling
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development server:
+   ```
+   npm run dev
+   ```
+
+## Usage
+
+- Click the green floating button to create a new post
+- Scroll down to automatically load more posts
+- Click "Like" to like a post
+
+## Project structure
+
+- `src/components/` - React components
+- `src/features/posts/` - Redux logic for posts
+- `src/app/` - Redux store configuration
