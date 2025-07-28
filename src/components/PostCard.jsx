@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 
 const Post = forwardRef(
-  ({ title, body, liked, likesCount = 0, onLike }, ref) => (
+  ({ title, body, liked, likesCount = 0, author = "Usuario", onLike }, ref) => (
     <div
       ref={ref}
       style={{
@@ -14,16 +14,34 @@ const Post = forwardRef(
         border: "1px solid #333333",
       }}
     >
-      <h3
+      <div
         style={{
-          margin: "0 0 12px 0",
-          color: "#ffffff",
-          fontSize: "18px",
-          fontWeight: "600",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          marginBottom: "12px",
         }}
       >
-        {title}
-      </h3>
+        <h3
+          style={{
+            margin: "0",
+            color: "#ffffff",
+            fontSize: "18px",
+            fontWeight: "600",
+          }}
+        >
+          {title}
+        </h3>
+        <span
+          style={{
+            color: "#888888",
+            fontSize: "12px",
+            fontWeight: "500",
+          }}
+        >
+          por {author}
+        </span>
+      </div>
       <p
         style={{
           margin: "0 0 18px 0",

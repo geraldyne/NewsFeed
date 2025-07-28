@@ -1,58 +1,68 @@
-import { useEffect, useRef, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addMorePosts, setPage, toggleLike } from "./features/posts/postSlice";
-import axios from "axios";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_POSTS, LIKE_POST } from "./apollo/queries.js";
 
 import Post from "./components/PostCard";
 import PostForm from "./components/PostForm";
 
 function App() {
-  const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.list);
-  const page = useSelector((state) => state.posts.page);
+  // Apollo GraphQL query para obtener posts
+  const {
+    data: graphqlData,
+    loading: graphqlLoading,
+    error: graphqlError,
+    refetch,
+  } = useQuery(GET_POSTS, {
+    errorPolicy: "all",
+    notifyOnNetworkStatusChange: true,
+    pollInterval: 5000, // Refrescar cada 5 segundos como fallback
+  });
 
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-
-  const observer = useRef();
-
-  const lastPostRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          dispatch(setPage(page + 1)); // reemplaza setPage de useState
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore, page, dispatch]
-  );
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
+  // Apollo mutation para dar like
+  const [likePostMutation] = useMutation(LIKE_POST, {
+    // Actualización optimista del caché
+    update(cache, { data: { likePost } }) {
       try {
-        const response = await axios.get(
-          `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`
+        // Leer la query actual del caché
+        const existingPosts = cache.readQuery({
+          query: GET_POSTS,
+        });
+
+        // Actualizar el post específico en el caché
+        const updatedPosts = existingPosts.posts.map((post) =>
+          post.id === likePost.id ? likePost : post
         );
 
-        if (response.data.length === 0) {
-          setHasMore(false);
-        } else {
-          dispatch(addMorePosts(response.data));
-        }
-      } catch (error) {
-        console.error("Error fetching posts", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        // Escribir los datos actualizados al caché
+        cache.writeQuery({
+          query: GET_POSTS,
+          data: {
+            posts: updatedPosts,
+          },
+        });
 
-    fetchPosts();
-  }, [page, dispatch]);
+      } catch (error) {
+        console.error("Error actualizando like en caché:", error);
+      }
+    },
+
+    onError: (error) => {
+      console.error("Error al dar like:", error);
+    },
+  });
+
+  // Función para manejar likes con GraphQL
+  const handleLike = async (postId) => {
+    try {
+      await likePostMutation({
+        variables: { id: postId },
+      });
+    } catch (error) {
+      console.error("Error al dar like:", error);
+    }
+  };
+
+  // Obtener posts de Apollo Client
+  const posts = graphqlData?.posts || [];
 
   return (
     <div
@@ -79,36 +89,56 @@ function App() {
 
       <PostForm />
 
+      {/* Indicador de loading de GraphQL */}
+      {graphqlLoading && posts.length === 0 && (
+        <div
+          style={{
+            textAlign: "center",
+            color: "#ffffff",
+            padding: "20px",
+            fontSize: "16px",
+          }}
+        >
+          Cargando posts desde GraphQL...
+        </div>
+      )}
+
+      {/* Indicador de error de GraphQL */}
+      {graphqlError && (
+        <div
+          style={{
+            textAlign: "center",
+            color: "#ff6b6b",
+            padding: "20px",
+            fontSize: "14px",
+            backgroundColor: "#2a1a1a",
+            margin: "10px 0",
+            borderRadius: "8px",
+            border: "1px solid #ff6b6b",
+          }}
+        >
+         Error conectando con GraphQL: {graphqlError.message}
+          <br />
+          <small>Usando datos de respaldo...</small>
+        </div>
+      )}
+
       {posts.map((post, i) => {
-        const uniqueKey = `${post.id}-${i}`; // Key más único combinando id e índice
-
-        if (i === posts.length - 1) {
-          return (
-            <Post
-              key={uniqueKey}
-              ref={lastPostRef}
-              title={post.title}
-              body={post.body}
-              liked={post.liked}
-              likesCount={post.likesCount}
-              onLike={() => dispatch(toggleLike(post.id))}
-            />
-          );
-        }
-
         return (
           <Post
-            key={uniqueKey}
+            key={post.id} // Usar solo el ID como key
             title={post.title}
             body={post.body}
-            liked={post.liked}
-            likesCount={post.likesCount}
-            onLike={() => dispatch(toggleLike(post.id))}
+            liked={post.userLiked}
+            likesCount={post.likesCount || 0}
+            author={post.author || "Usuario"}
+            onLike={() => handleLike(post.id)}
           />
         );
       })}
 
-      {loading && (
+      {/* Indicador de loading específico para cuando no hay posts */}
+      {graphqlLoading && posts.length === 0 && (
         <p
           style={{
             textAlign: "center",
@@ -117,10 +147,27 @@ function App() {
             margin: "20px 0",
           }}
         >
-          Cargando más publicaciones...
+          Cargando publicaciones...
         </p>
       )}
-      {!hasMore && (
+
+      {/* Mensaje cuando ya se cargaron todos los posts disponibles */}
+      {!graphqlLoading && posts.length > 0 && (
+        <p
+          style={{
+            textAlign: "center",
+            color: "#808080",
+            fontSize: "14px",
+            margin: "20px 0",
+            fontStyle: "italic",
+          }}
+        >
+          {posts.length} publicaciones cargadas
+        </p>
+      )}
+
+      {/* Mensaje cuando no hay posts en absoluto */}
+      {!graphqlLoading && posts.length === 0 && !graphqlError && (
         <p
           style={{
             textAlign: "center",
@@ -130,7 +177,7 @@ function App() {
             fontStyle: "italic",
           }}
         >
-          No hay más publicaciones
+          No hay publicaciones aún. ¡Crea la primera!
         </p>
       )}
     </div>

@@ -1,30 +1,72 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addPost } from "../features/posts/postSlice";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST, GET_POSTS } from "../apollo/queries.js";
 
 const PostForm = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  // Apollo GraphQL mutation
+  const [createPost, { loading, error }] = useMutation(CREATE_POST, {
+    // Actualizar el caché manualmente después de crear el post
+    update(cache, { data: { createPost } }) {
+      try {
+        // Leer la query actual del caché
+        const existingPosts = cache.readQuery({
+          query: GET_POSTS,
+        });
 
-  const handleSubmit = (e) => {
+        // Escribir los nuevos datos al caché (nuevo post al principio)
+        cache.writeQuery({
+          query: GET_POSTS,
+          data: {
+            posts: [createPost, ...existingPosts.posts],
+          },
+        });
+
+        console.log("✅ Caché actualizado con nuevo post:", createPost);
+      } catch (error) {
+        console.error("Error actualizando caché:", error);
+        // Fallback: limpiar y refetch
+        cache.evict({ fieldName: "posts" });
+        cache.gc();
+      }
+    },
+
+    // Fallback adicional
+    refetchQueries: [{ query: GET_POSTS }],
+    awaitRefetchQueries: false, // No esperar el refetch
+
+    onCompleted: (data) => {
+      console.log("✅ Post creado exitosamente:", data.createPost);
+    },
+    onError: (error) => {
+      console.error("❌ Error creando post:", error);
+    },
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (title.trim() && body.trim()) {
-      dispatch(
-        addPost({
-          title: title.trim(),
-          body: body.trim(),
-          userId: 1, // Simulamos un usuario
-        })
-      );
+      try {
+        // Crear post con GraphQL
+        await createPost({
+          variables: {
+            title: title.trim(),
+            body: body.trim(),
+            author: "Usuario Demo", // Por ahora usamos un autor fijo
+          },
+        });
 
-      // Limpiar el formulario
-      setTitle("");
-      setBody("");
-      setIsOpen(false);
+        // Limpiar el formulario
+        setTitle("");
+        setBody("");
+        setIsOpen(false);
+      } catch (err) {
+        console.error("Error al crear el post:", err);
+      }
     }
   };
 
@@ -271,29 +313,52 @@ const PostForm = () => {
 
                   <button
                     type="submit"
+                    disabled={loading}
                     style={{
-                      backgroundColor: "#4caf50",
+                      backgroundColor: loading ? "#666666" : "#4caf50",
                       color: "white",
                       border: "none",
                       padding: "12px 20px",
                       borderRadius: "8px",
-                      cursor: "pointer",
+                      cursor: loading ? "not-allowed" : "pointer",
                       fontSize: "16px",
                       fontWeight: "500",
                       transition: "all 0.3s ease",
+                      opacity: loading ? 0.7 : 1,
                     }}
                     onMouseOver={(e) => {
-                      e.target.style.backgroundColor = "#45a049";
-                      e.target.style.transform = "translateY(-1px)";
+                      if (!loading) {
+                        e.target.style.backgroundColor = "#45a049";
+                        e.target.style.transform = "translateY(-1px)";
+                      }
                     }}
                     onMouseOut={(e) => {
-                      e.target.style.backgroundColor = "#4caf50";
-                      e.target.style.transform = "translateY(0)";
+                      if (!loading) {
+                        e.target.style.backgroundColor = "#4caf50";
+                        e.target.style.transform = "translateY(0)";
+                      }
                     }}
                   >
-                    Publicar
+                    {loading ? "Publicando..." : "Publicar"}
                   </button>
                 </div>
+
+                {/* Mostrar errores de GraphQL */}
+                {error && (
+                  <div
+                    style={{
+                      color: "#ff6b6b",
+                      fontSize: "14px",
+                      marginTop: "10px",
+                      padding: "8px",
+                      backgroundColor: "#2a1a1a",
+                      borderRadius: "4px",
+                      border: "1px solid #ff6b6b",
+                    }}
+                  >
+                    Error: {error.message}
+                  </div>
+                )}
               </form>
             </div>
           </div>
