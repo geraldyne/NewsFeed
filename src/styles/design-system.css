@@ -1,0 +1,396 @@
+/*
+🎨 NEWSFEED DESIGN SYSTEM
+Modern CSS Variables for consistent UI
+*/
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+
+  /* Primary Colors */
+  --color-primary: #4caf50;
+  --color-primary-hover: #45a049;
+  --color-primary-light: #66bb6a;
+  --color-primary-dark: #388e3c;
+
+  /* Background Colors */
+  --color-bg-primary: #0a0a0a; /* Main background */
+  --color-bg-secondary: #1a1a1a; /* Cards, containers */
+  --color-bg-tertiary: #2d2d2d; /* Elevated elements */
+  --color-bg-quaternary: #333333; /* Code blocks, inputs */
+
+  /* Text Colors */
+  --color-text-primary: #ffffff; /* Main text */
+  --color-text-secondary: #e0e0e0; /* Secondary text */
+  --color-text-tertiary: #b0b0b0; /* Muted text */
+  --color-text-quaternary: #808080; /* Disabled/placeholder */
+  --color-text-accent: #888888; /* Author, timestamps */
+
+  /* Status Colors */
+  --color-success: #4caf50;
+  --color-success-dark: #45a049;
+  --color-warning: #ff9800;
+  --color-error: #ff6b6b;
+  --color-info: #2196f3;
+
+  /* Additional Text Colors */
+  --color-text-muted: #888888;
+
+  /* Border Colors */
+  --color-border-primary: #333333;
+  --color-border-secondary: #444444;
+  --color-border-accent: #555555;
+
+  /* ===== TYPOGRAPHY ===== */
+
+  /* Font Families */
+  --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  --font-monospace: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.8;
+
+  /* ===== SPACING SCALE ===== */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ===== BORDER RADIUS ===== */
+
+  --radius-sm: 4px;
+  --radius-base: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 50%;
+
+  /* ===== SHADOWS ===== */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.9);
+
+  /* Text Shadows */
+  --text-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --text-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  /* ===== TRANSITIONS ===== */
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+
+  /* ===== Z-INDEX SCALE ===== */
+
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-popover: 50;
+  --z-tooltip: 60;
+  --z-max: 9999;
+
+  /* ===== BREAKPOINTS (for reference) ===== */
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ===== CONTAINER SIZES ===== */
+
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 800px; /* Current app max-width */
+  --container-xl: 1024px;
+
+  /* ===== COMPONENT-SPECIFIC ===== */
+
+  /* Buttons */
+  --button-height-sm: 32px;
+  --button-height-base: 40px;
+  --button-height-lg: 48px;
+  --button-padding-x: var(--space-5);
+  --button-padding-y: var(--space-3);
+
+  /* Form Elements */
+  --input-height: 40px;
+  --input-padding-x: var(--space-3);
+  --input-padding-y: var(--space-3);
+
+  /* Cards */
+  --card-padding: var(--space-5);
+  --card-radius: var(--radius-lg);
+
+  /* Modal */
+  --modal-padding: var(--space-8);
+  --modal-max-width: 500px;
+  --modal-backdrop-blur: blur(4px);
+}
+
+/* ===== GLOBAL RESETS & BASE STYLES ===== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Typography */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+.text-base {
+  font-size: var(--font-size-base);
+}
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
+
+.font-light {
+  font-weight: var(--font-weight-light);
+}
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-tertiary {
+  color: var(--color-text-tertiary);
+}
+.text-accent {
+  color: var(--color-text-accent);
+}
+
+/* Colors */
+.text-success {
+  color: var(--color-success);
+}
+.text-warning {
+  color: var(--color-warning);
+}
+.text-error {
+  color: var(--color-error);
+}
+.text-info {
+  color: var(--color-info);
+}
+
+/* Spacing */
+.p-1 {
+  padding: var(--space-1);
+}
+.p-2 {
+  padding: var(--space-2);
+}
+.p-3 {
+  padding: var(--space-3);
+}
+.p-4 {
+  padding: var(--space-4);
+}
+.p-5 {
+  padding: var(--space-5);
+}
+.p-6 {
+  padding: var(--space-6);
+}
+
+.m-1 {
+  margin: var(--space-1);
+}
+.m-2 {
+  margin: var(--space-2);
+}
+.m-3 {
+  margin: var(--space-3);
+}
+.m-4 {
+  margin: var(--space-4);
+}
+.m-5 {
+  margin: var(--space-5);
+}
+.m-6 {
+  margin: var(--space-6);
+}
+
+/* Layout */
+.container {
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-base);
+}
+
+/* ===== COMPONENT BASE STYLES ===== */
+
+/* Button Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--button-padding-y) var(--button-padding-x);
+  border-radius: var(--radius-base);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-decoration: none;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-bg-quaternary);
+}
+
+/* Input Base */
+.input {
+  width: 100%;
+  padding: var(--input-padding-y) var(--input-padding-x);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-base);
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  transition: var(--transition-base);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.input::placeholder {
+  color: var(--color-text-quaternary);
+}
+
+/*
+🚀 DESIGN SYSTEM NOTES:
+
+1. COLOR SYSTEM:
+   - Semantic naming (primary, secondary, etc.)
+   - Consistent darkness levels
+   - Clear hierarchy
+
+2. TYPOGRAPHY:
+   - Modular scale (1.2 ratio)
+   - System fonts for performance
+   - Consistent line heights
+
+3. SPACING:
+   - 4px base unit
+   - Exponential scale for larger sizes
+   - Consistent vertical rhythm
+
+4. COMPONENTS:
+   - Reusable base classes
+   - Consistent hover states
+   - Proper focus indicators
+
+5. ACCESSIBILITY:
+   - High contrast ratios
+   - Focus indicators
+   - Semantic naming
+*/

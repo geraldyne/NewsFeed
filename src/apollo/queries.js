@@ -8,10 +8,21 @@ export const GET_POSTS = gql`
       id
       title
       body
-      author
+      author {
+        name
+        username
+        avatar
+      }
       likesCount
       userLiked
       createdAt
+      views
+      commentsCount
+      readTime
+      tags
+      isBookmarked
+      trending
+      timestamp
     }
   }
 `;
@@ -22,10 +33,21 @@ export const GET_POST_BY_ID = gql`
       id
       title
       body
-      author
+      author {
+        name
+        username
+        avatar
+      }
       likesCount
       userLiked
       createdAt
+      views
+      commentsCount
+      readTime
+      tags
+      isBookmarked
+      trending
+      timestamp
     }
   }
 `;
@@ -33,15 +55,38 @@ export const GET_POST_BY_ID = gql`
 // ✏️ MUTATIONS (Modificar datos)
 
 export const CREATE_POST = gql`
-  mutation CreatePost($title: String!, $body: String!, $author: String!) {
-    createPost(title: $title, body: $body, author: $author) {
+  mutation CreatePost(
+    $title: String!
+    $body: String!
+    $authorName: String!
+    $authorUsername: String
+    $tags: [String!]
+  ) {
+    createPost(
+      title: $title
+      body: $body
+      authorName: $authorName
+      authorUsername: $authorUsername
+      tags: $tags
+    ) {
       id
       title
       body
-      author
+      author {
+        name
+        username
+        avatar
+      }
       likesCount
       userLiked
       createdAt
+      views
+      commentsCount
+      readTime
+      tags
+      isBookmarked
+      trending
+      timestamp
     }
   }
 `;
@@ -53,6 +98,18 @@ export const LIKE_POST = gql`
       title
       likesCount
       userLiked
+      author {
+        name
+        username
+        avatar
+      }
+      views
+      commentsCount
+      readTime
+      tags
+      isBookmarked
+      trending
+      timestamp
     }
   }
 `;

@@ -39,7 +39,10 @@ const Post = forwardRef(
             fontWeight: "500",
           }}
         >
-          por {author}
+          por{" "}
+          {typeof author === "string"
+            ? author
+            : author?.name || "Autor anónimo"}
         </span>
       </div>
       <p
